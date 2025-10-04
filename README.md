@@ -9,3 +9,7 @@ The goal is to design a data-driven framework that:
 
 Calculates a Flight Difficulty Score for each flight using flight-level, customer, and station-level data.
 Identifies the primary operational drivers contributing to flight difficulty to enable proactive planning and optimized resource allocation.
+
+DATASETS :-  [https://drive.google.com/drive/folders/1NOaPFVIqTeWWTT0wqOI7XLF4tIkuMJRA?usp=drive_link](https://drive.google.com/drive/folders/1NOaPFVIqTeWWTT0wqOI7XLF4tIkuMJRA?usp=drive_link)
+
+Codes:- Are uploaded in the repo.
