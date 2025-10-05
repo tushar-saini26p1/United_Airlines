@@ -1,0 +1,70 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df_flight = pd.read_csv("Flight Level Data.csv", sep='\t')
+df_pnr = pd.read_csv("PNR+Flight+Level+Data.csv", sep='\t')
+
+df_flight = df_flight.rename(columns={'s': 'company_id'})
+datetime_cols = ['scheduled_departure_datetime_local', 'actual_departure_datetime_local']
+for col in datetime_cols:
+    df_flight[col] = pd.to_datetime(df_flight[col], errors='coerce')
+
+df_flight['Departure_Delay_Minutes'] = (
+    df_flight['actual_departure_datetime_local'] - df_flight['scheduled_departure_datetime_local']
+).dt.total_seconds() / 60
+
+df_flight['Ground_Time_Difficulty_Minutes'] = (
+    df_flight['actual_ground_time_minutes'] - df_flight['minimum_turn_minutes']
+)
+
+df_flight_operational = df_flight[[
+    'company_id', 'flight_number', 'scheduled_departure_date_local', 'total_seats',
+    'Departure_Delay_Minutes', 'Ground_Time_Difficulty_Minutes'
+]].copy()
+
+df_pnr_agg = df_pnr.groupby([
+    'company_id', 'flight_number', 'scheduled_departure_date_local', 'record_locator'
+])['total_pax'].max().reset_index()
+
+df_pnr_load = df_pnr_agg.groupby([
+    'company_id', 'flight_number', 'scheduled_departure_date_local'
+])['total_pax'].sum().reset_index()
+df_pnr_load = df_pnr_load.rename(columns={'total_pax': 'Total_Passengers'})
+
+join_keys = ['company_id', 'flight_number', 'scheduled_departure_date_local']
+df_merged = pd.merge(df_flight_operational, df_pnr_load, on=join_keys, how='inner')
+
+df_merged['Load_Factor'] = df_merged['Total_Passengers'] / df_merged['total_seats']
+
+corr_delay = df_merged['Load_Factor'].corr(df_merged['Departure_Delay_Minutes'])
+corr_ground = df_merged['Load_Factor'].corr(df_merged['Ground_Time_Difficulty_Minutes'])
+
+sns.set_style("whitegrid")
+
+plt.figure(figsize=(10, 6))
+sns.histplot(df_merged['Load_Factor'], bins=30, kde=True, color='skyblue', binrange=(0.0, 1.05))
+plt.title('Distribution of Flight Load Factors', fontsize=16)
+plt.xlabel('Load Factor (Total Passengers / Total Seats)', fontsize=12)
+plt.ylabel('Number of Flights', fontsize=12)
+plt.tight_layout()
+plt.savefig('load_factor_distribution.png')
+plt.close()
+
+plt.figure(figsize=(10, 6))
+df_plot = df_merged[(df_merged['Departure_Delay_Minutes'] >= -60) & (df_merged['Departure_Delay_Minutes'] <= 180)].copy()
+
+sns.scatterplot(x='Load_Factor', y='Departure_Delay_Minutes', data=df_plot, alpha=0.4, color='darkorange')
+plt.title('Load Factor vs. Departure Delay', fontsize=16)
+plt.xlabel('Load Factor', fontsize=12)
+plt.ylabel('Departure Delay (Minutes)', fontsize=12)
+plt.axhline(0, color='red', linestyle='--', linewidth=1)
+plt.tight_layout()
+plt.savefig('load_factor_vs_departure_delay.png')
+plt.close()
+
+print("\n--- Correlation Results ---")
+print({'Load_Factor_vs_Departure_Delay': corr_delay, 'Load_Factor_vs_Ground_Time_Difficulty': corr_ground})
+print("\n--- Load Factor Summary (Distribution of Passenger Loads) ---")
+print(df_merged['Load_Factor'].describe(percentiles=[.25, .5, .75, .90, .95]))
