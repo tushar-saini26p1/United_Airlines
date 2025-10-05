@@ -13,3 +13,5 @@ Identifies the primary operational drivers contributing to flight difficulty to 
 DATASETS :-  [https://drive.google.com/drive/folders/1NOaPFVIqTeWWTT0wqOI7XLF4tIkuMJRA?usp=drive_link](https://drive.google.com/drive/folders/1NOaPFVIqTeWWTT0wqOI7XLF4tIkuMJRA?usp=drive_link)
 
 Codes:- Are uploaded in the repo.
+Presentation link : (https://www.canva.com/design/DAG0w5LvhxI/-k6oW4wpJ6ZLvohyBF3MKg/edit?utm_content=DAG0w5LvhxI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+
