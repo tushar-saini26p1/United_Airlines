@@ -1,0 +1,21 @@
+,Values,
+Row Labels,Count of pax_load,Average of ground_time_constraint
+G7,859,0.038175906
+High SSR (>5),1,0
+Low SSR (0),332,0.044557541
+Medium SSR (1-5),526,0.034220532
+OO,2131,0.065705414
+High SSR (>5),21,0.002267574
+Low SSR (0),661,0.058346934
+Medium SSR (1-5),1449,0.069981569
+UA,4502,0.06016189
+High SSR (>5),700,0.064204127
+Low SSR (0),472,0.054501686
+Medium SSR (1-5),3330,0.060114458
+YX,607,0.005076627
+High SSR (>5),8,0
+Low SSR (0),186,0
+Medium SSR (1-5),413,0.00746129
+(blank),,
+(blank),,
+Grand Total,8099,0.055160104
